@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import io from "socket.io-client";
 import Editor from "@monaco-editor/react";
-
+import { v4 as uuidv4 } from 'uuid';
 const socket = io("http://localhost:5000");
 
 const App = () => {
@@ -66,7 +66,10 @@ const App = () => {
       setJoined(true);
     }
   };
-
+  const generateRoomId = () => {
+    const newRoomId = uuidv4();// Taking first 8 characters for shorter ID
+    setRoomId(newRoomId);
+  };
   const leaveRoom = () => {
     socket.emit("leaveRoom");
     setJoined(false);
@@ -103,23 +106,27 @@ const App = () => {
       <div className="join-container">
         <div className="join-form">
           <h1>Join Code Room</h1>
-          <input
-            type="text"
-            placeholder="Room Id"
-            value={roomId}
-            onChange={(e) => setRoomId(e.target.value)}
-          />
+          <div className="room-id-container">
+            <input
+              type="text"
+              placeholder="Room Id"
+              value={roomId}
+              onChange={(e) => setRoomId(e.target.value)}
+            />
+          </div>
           <input
             type="text"
             placeholder="Your Name"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
           />
+          <button onClick={generateRoomId}>Generate Room ID</button>
           <button onClick={joinRoom}>Join Room</button>
         </div>
       </div>
     );
   }
+  
 
   return (
     <div className="editor-container">
