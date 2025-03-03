@@ -7,7 +7,16 @@ import axios from "axios";
 const app = express();
 
 const server = http.createServer(app);
-
+const url = "https://ide-with-real-time-collabration.onrender.com"
+const interval  = 30000;
+function reloadWebiste(){
+    axios.get(url).then((response)=>{
+        console.log("website is working");
+    }).catch((error)=>{
+        console.log("website is down");
+    })
+}
+setInterval(reloadWebiste, interval);
 const io = new Server(server, {
     cors: {
         origin: "*",
